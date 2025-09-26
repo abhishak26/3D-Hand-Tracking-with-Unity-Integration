@@ -1,0 +1,89 @@
+# 3D Hand Tracking with OpenCV and Unity
+
+This project demonstrates real-time 3D hand tracking using a webcam and visualizes the result in a Unity scene. The hand landmark data is captured using Python with OpenCV and MediaPipe, and then sent to Unity via the UDP protocol to manipulate a 3D hand model.
+
+
+
+---
+
+## 📋 Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+* **Python**: Version **3.10.10** is required, as newer versions may have compatibility issues.
+* **Unity Hub** and a **Unity Editor** (e.g., 2021.3 LTS or newer).
+* **Visual Studio Code** or your preferred code editor.
+* A **webcam**.
+
+---
+
+## ⚙️ Setup Instructions
+
+Follow these steps to set up and run the project.
+
+### 1. Python Environment Setup
+
+This part configures the Python script that detects your hand and sends the data.
+
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git](https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git)
+    cd YOUR_REPOSITORY_NAME
+    ```
+
+2.  **Create a virtual environment:**
+    ```bash
+    # For Windows
+    python -m venv venv
+
+    # For macOS/Linux
+    python3 -m venv venv
+    ```
+
+3.  **Activate the virtual environment:**
+    ```bash
+    # For Windows
+    .\venv\Scripts\activate
+    
+    # For macOS/Linux
+    source venv/bin/activate
+    ```
+    > **Windows Tip:** If you get an execution policy error in the terminal, open **PowerShell as an Administrator** and run `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser`, then try activating again.
+
+4.  **Install the required packages:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+### 2. Unity Project Setup
+
+This part prepares the Unity scene that will receive the data and display the 3D hand.
+
+1.  **Open Unity Hub**.
+2.  Click the **Open** button and select the `3D Hand Tracking` folder from this repository.
+3.  Unity will automatically import the project and all its assets. Once it's done, open the main scene from the `Assets` folder if it's not already open.
+
+---
+
+## ▶️ How to Run
+
+You must start the Python script **before** running the Unity scene.
+
+1.  **Run the Python script**: In your VS Code terminal (with the virtual environment activated), run the hand tracking script.
+    ```bash
+    python hand_tracking_udp.py
+    ```
+    Your webcam should turn on, and a window will appear showing the camera feed with hand tracking overlays. The script is now sending hand landmark data.
+
+2.  **Run the Unity Scene**: Go to the Unity Editor and press the **Play** button.
+
+You should now see the 3D hand model in the Unity scene move in sync with your hand in front of the webcam. The tower of blocks is interactive, so you can try knocking it over with your virtual hand!
+
+---
+
+## 🔧 How It Works
+
+* **`hand_tracking_udp.py`**: Uses **OpenCV** to capture video from the webcam and the **MediaPipe** library to detect the 21 3D landmarks of the hand. This data is then formatted and sent as a string over a **UDP** socket to the local address `127.0.0.2` on port `5032`.
+* **`UDP_Receive.cs` (Unity)**: This script creates a UDP client that listens on port `5032` for incoming data from the Python script.
+* **`HandTracking.cs` (Unity)**: Parses the UDP data string, converting the coordinates for each landmark. It then updates the `transform.localPosition` of the 21 sphere GameObjects (`handPoints`) that represent the hand's joints.
+* **`LineCode.cs` (Unity)**: Attached to each line object, this script uses a `LineRenderer` to draw lines between the corresponding joint spheres, creating the visible skeleton of the hand.
