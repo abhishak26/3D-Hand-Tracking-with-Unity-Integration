@@ -2,7 +2,14 @@
 
 This project demonstrates real-time 3D hand tracking using a webcam and visualizes the result in a Unity scene. The hand landmark data is captured using Python with OpenCV and MediaPipe, and then sent to Unity via the UDP protocol to manipulate a 3D hand model.
 
+## Table of Contents
 
+* [Prerequisites](#-prerequisites)
+* [Setup Instructions](#-setup-instructions)
+    * [Python Environment Setup](#1-python-environment-setup)
+    * [Unity Project Setup](#2-unity-project-setup)
+* [How to Run](#-how-to-run)
+* [How It Works](#-how-it-works)
 
 ---
 
